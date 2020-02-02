@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @CacheConfig(cacheNames = {"persons"}, cacheManager = "caffeineCacheManager")
 @Slf4j
@@ -18,7 +19,7 @@ import java.util.Optional;
 @Service
 public class PersonServiceImpl implements PersonService {
 
-    public static final String FETCH_FROM_DB = "Fetch from DB";
+    public static final String FETCH_FROM_DB = "Fetch from DB %s";
 
     private PersonRepository repository;
 
@@ -29,26 +30,26 @@ public class PersonServiceImpl implements PersonService {
 
     @Cacheable
     @Override
-    public Optional<Person> findByName(String name) {
-        log.info(FETCH_FROM_DB);
+    public Optional<Person> findByName(String name, UUID uuid) {
+        log.info(String.format(FETCH_FROM_DB, uuid));
         return repository.findByName(name);
     }
 
     @Cacheable
     @Override
-    public List<Person> findAll() {
-        log.info(FETCH_FROM_DB);
+    public List<Person> findAll(UUID uuid) {
+        log.info(String.format(FETCH_FROM_DB, uuid));
         return repository.findAll();
     }
 
     @CachePut(key = "#person.name")
     @Override
-    public Person save(Person person) {
-        log.info(FETCH_FROM_DB);
+    public Person save(Person person, UUID uuid) {
+        log.info(String.format(FETCH_FROM_DB, uuid));
         return repository.save(person);
     }
 
-    @CacheEvict(value = "persons", allEntries = true)
+    @CacheEvict
     @Override
     public void clear() {
         // no op
