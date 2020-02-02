@@ -49,7 +49,7 @@ public class PersonServiceImpl implements PersonService {
         return repository.save(person);
     }
 
-    @CacheEvict
+    @CacheEvict(allEntries = true)
     @Override
     public void clear() {
         // no op
