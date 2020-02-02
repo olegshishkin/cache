@@ -18,6 +18,8 @@ import java.util.Optional;
 @Service
 public class PersonServiceImpl implements PersonService {
 
+    public static final String FETCH_FROM_DB = "Fetch from DB";
+
     private PersonRepository repository;
 
     @Autowired
@@ -28,18 +30,21 @@ public class PersonServiceImpl implements PersonService {
     @Cacheable
     @Override
     public Optional<Person> findByName(String name) {
+        log.info(FETCH_FROM_DB);
         return repository.findByName(name);
     }
 
     @Cacheable
     @Override
     public List<Person> findAll() {
+        log.info(FETCH_FROM_DB);
         return repository.findAll();
     }
 
     @CachePut(key = "#person.name")
     @Override
     public Person save(Person person) {
+        log.info(FETCH_FROM_DB);
         return repository.save(person);
     }
 
