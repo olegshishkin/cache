@@ -28,14 +28,14 @@ public class PersonServiceImpl implements PersonService {
         this.repository = repository;
     }
 
-    @Cacheable
+    @Cacheable(key = "#name")
     @Override
     public Optional<Person> findByName(String name, UUID uuid) {
         log.info(String.format(FETCH_FROM_DB, uuid));
         return repository.findByName(name);
     }
 
-    @Cacheable
+    @Cacheable(key = "#root.method.name")
     @Override
     public List<Person> findAll(UUID uuid) {
         log.info(String.format(FETCH_FROM_DB, uuid));
