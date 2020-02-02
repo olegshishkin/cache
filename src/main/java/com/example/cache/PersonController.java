@@ -47,6 +47,7 @@ public class PersonController {
     @GetMapping("/clear")
     public Person clear() {
         log.info("Clear cache");
+        service.clear();
         return null;
     }
 }
