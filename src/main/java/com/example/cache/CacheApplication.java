@@ -1,14 +1,12 @@
 package com.example.cache;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.hazelcast.config.Config;
+import com.hazelcast.config.EvictionPolicy;
+import com.hazelcast.config.MapConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
-
-import java.util.concurrent.TimeUnit;
 
 @EnableCaching
 @SpringBootApplication
@@ -18,16 +16,17 @@ public class CacheApplication {
         SpringApplication.run(CacheApplication.class, args);
     }
 
-    @Bean("caffeineCacheManager")
-    public CacheManager cacheManager() {
-        Caffeine<Object, Object> caffeine = Caffeine.newBuilder()
-                .initialCapacity(100)
-                .maximumSize(500)
-                .expireAfterAccess(10, TimeUnit.SECONDS)
-//                .weakKeys()
-                .recordStats();
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager("persons");
-        cacheManager.setCaffeine(caffeine);
-        return cacheManager;
+    @Bean
+    public Config hazelCastConfig() {
+        return new Config()
+                .setInstanceName("hazel-instance")
+                .addMapConfig(getMapConfig());
+    }
+
+    private static MapConfig getMapConfig() {
+        return new MapConfig()
+                .setName("persons")
+                .setEvictionPolicy(EvictionPolicy.LRU)
+                .setTimeToLiveSeconds(20);
     }
 }

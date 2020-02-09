@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@CacheConfig(cacheNames = {"persons"}, cacheManager = "caffeineCacheManager")
+@CacheConfig(cacheNames = {"persons"})
 @Slf4j
 @Transactional
 @Service
