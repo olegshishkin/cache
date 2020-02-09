@@ -2,10 +2,12 @@ package com.example.cache;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,10 +16,17 @@ import java.util.UUID;
 public class PersonController {
 
     private final PersonService service;
+    private final CacheManager cacheManager;
 
     @Autowired
-    public PersonController(PersonService service) {
+    public PersonController(PersonService service, CacheManager cacheManager) {
         this.service = service;
+        this.cacheManager = cacheManager;
+    }
+
+    @PostConstruct
+    public void setUp() {
+        log.info("Cache manager: {}", cacheManager.getClass().getName());
     }
 
     @GetMapping("/person")
