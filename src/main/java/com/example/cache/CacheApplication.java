@@ -1,10 +1,10 @@
 package com.example.cache;
 
 import com.hazelcast.config.Config;
-import com.hazelcast.config.EvictionConfig;
 import com.hazelcast.config.EvictionPolicy;
 import com.hazelcast.config.MapConfig;
-import com.hazelcast.config.MaxSizePolicy;
+import com.hazelcast.config.MaxSizeConfig;
+import com.hazelcast.config.MaxSizeConfig.MaxSizePolicy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -22,19 +22,12 @@ public class CacheApplication {
     public Config hazelCastConfig() {
         return new Config()
                 .setInstanceName("hazelcast-instance")
-                .addMapConfig(getMapConfig());
-    }
-
-    private static MapConfig getMapConfig() {
-        return new MapConfig()
-                .setName("persons")
-                .setEvictionConfig(getEvictionConfig())
-                .setTimeToLiveSeconds(20);
-    }
-
-    private static EvictionConfig getEvictionConfig() {
-        return new EvictionConfig()
-                .setEvictionPolicy(EvictionPolicy.LRU)
-                .setMaxSizePolicy(MaxSizePolicy.FREE_HEAP_SIZE);
+                .addMapConfig(new MapConfig()
+                        .setName("persons")
+                        .setEvictionPolicy(EvictionPolicy.LRU)
+                        .setMaxSizeConfig(new MaxSizeConfig()
+                                .setSize(1800)
+                                .setMaxSizePolicy(MaxSizePolicy.FREE_HEAP_SIZE))
+                        .setTimeToLiveSeconds(20));
     }
 }
